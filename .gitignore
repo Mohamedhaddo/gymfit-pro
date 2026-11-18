@@ -1,0 +1,21 @@
+# mi copia de referencia del codigo, no se sube al repositorio
+_referencia/
+
+# configuracion con la contraseña de la base de datos
+config/database.php
+
+# imagenes que suben los usuarios, solo dejo la carpeta
+public/uploads/actividades/*
+!public/uploads/actividades/.gitkeep
+
+# archivos del sistema y del editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
+
+# logs y entorno
+*.log
+.env
+/vendor/
+/node_modules/
