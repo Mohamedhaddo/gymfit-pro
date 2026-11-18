@@ -20,6 +20,18 @@ switch ($pagina) {
         include __DIR__ . '/views/inicio.php';
         break;
 
+    case 'registro':
+        $titulo = 'Crear cuenta';
+        include __DIR__ . '/views/auth/registro.php';
+        break;
+
+    // Aquí llega el formulario de registro. No enseño ninguna vista, el controlador
+    // procesa los datos y redirige él mismo a la página que toque
+    case 'procesar_registro':
+        require_once __DIR__ . '/controllers/AuthController.php';
+        AuthController::registro();
+        break;
+
     // Cualquier página que no exista cae aquí. Además de enseñar la página de error,
     // le digo al navegador que es un error 404 con http_response_code().
     // Referencia: https://www.php.net/manual/es/function.http-response-code.php

@@ -29,4 +29,20 @@ if (session_status() === PHP_SESSION_NONE) {
         </nav>
     </header>
 
+    <?php
+    // Mensajes de aviso. Cuando un controlador termina (por ejemplo al registrarse)
+    // deja un mensaje en la sesión antes de redirigir. Aquí lo enseño y lo borro
+    // en el momento con unset(), para que no vuelva a salir al recargar la página.
+    if (isset($_SESSION['mensaje'])):
+        $tipoMensaje = $_SESSION['mensaje_tipo'] ?? 'exito';
+    ?>
+        <div class="mensaje mensaje-<?php echo htmlspecialchars($tipoMensaje); ?>">
+            <?php echo htmlspecialchars($_SESSION['mensaje']); ?>
+        </div>
+    <?php
+        unset($_SESSION['mensaje']);
+        unset($_SESSION['mensaje_tipo']);
+    endif;
+    ?>
+
     <main class="contenido">
