@@ -24,8 +24,19 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="index.php?pagina=actividades">Actividades</a>
             <a href="index.php?pagina=ejercicios">Guía de ejercicios</a>
             <a href="index.php?pagina=guia_estilo">Guía de estilo</a>
-            <a href="index.php?pagina=login">Entrar</a>
-            <a href="index.php?pagina=registro">Registrarse</a>
+
+            <?php // El final del menú cambia según si hay alguien conectado y según su rol ?>
+            <?php if (isset($_SESSION['usuario_id'])): ?>
+                <?php if ($_SESSION['usuario_rol'] === 'admin'): ?>
+                    <a href="index.php?pagina=admin">Panel admin</a>
+                <?php else: ?>
+                    <a href="index.php?pagina=panel">Mi panel</a>
+                <?php endif; ?>
+                <a href="index.php?pagina=logout">Cerrar sesión</a>
+            <?php else: ?>
+                <a href="index.php?pagina=login">Entrar</a>
+                <a href="index.php?pagina=registro">Registrarse</a>
+            <?php endif; ?>
         </nav>
     </header>
 

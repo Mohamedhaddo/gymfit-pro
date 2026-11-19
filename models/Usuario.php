@@ -8,6 +8,25 @@ require_once __DIR__ . '/../config/database.php';
 
 class Usuario {
 
+    // Busco un usuario por su email. Lo uso en el login para sacar su contraseña
+    // cifrada y su rol. Si no existe, fetch() me devuelve false.
+    public static function buscarPorEmail($email) {
+        $pdo = obtenerConexion();
+        $sql = 'SELECT * FROM usuarios WHERE email = ?';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$email]);
+        return $stmt->fetch();
+    }
+
+    // Busco un usuario por su id, para enseñar los datos de su cuenta en el panel
+    public static function buscarPorId($id) {
+        $pdo = obtenerConexion();
+        $sql = 'SELECT id, nombre, email, rol, fecha_registro FROM usuarios WHERE id = ?';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
     // Compruebo si ya hay alguien registrado con ese email, para no repetirlo.
     // Uso consultas preparadas con ? en vez de meter la variable en el SQL,
     // así nadie puede colar código SQL escribiendo cosas raras en el formulario.

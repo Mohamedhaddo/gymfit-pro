@@ -67,7 +67,67 @@ class AuthController {
         $passwordCifrada = password_hash($password, PASSWORD_DEFAULT);
         Usuario::crear($nombre, $email, $passwordCifrada);
 
-        $_SESSION['mensaje'] = 'Tu cuenta se ha creado correctamente.';
+        // Ahora que ya existe el login, después de registrarse le mando directamente ahí
+        $_SESSION['mensaje'] = 'Tu cuenta se ha creado correctamente. Ya puedes iniciar sesión.';
+        $_SESSION['mensaje_tipo'] = 'exito';
+        header('Location: index.php?pagina=login');
+        exit;
+    }
+
+    // Proceso el formulario de login
+    public static function login() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?pagina=login');
+            exit;
+        }
+
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        $usuario = Usuario::buscarPorEmail($email);
+
+        // password_verify compara la contraseña que ha escrito con la cifrada que tengo guardada.
+        // Si el usuario no existe o la contraseña no coincide doy el mismo mensaje en los dos casos,
+        // así no le digo a nadie qué emails están registrados.
+        // Referencia: https://www.php.net/manual/es/function.password-verify.php
+        if (!$usuario || !password_verify($password, $usuario['password'])) {
+            $_SESSION['mensaje'] = 'El email o la contraseña no son correctos.';
+            $_SESSION['mensaje_tipo'] = 'error';
+            header('Location: index.php?pagina=login');
+            exit;
+        }
+
+        // Al entrar le cambio el identificador de sesión por uno nuevo. Así, si alguien
+        // hubiera conseguido el id de sesión de antes del login, ya no le sirve de nada.
+        // Referencia: https://www.php.net/manual/es/function.session-regenerate-id.php
+        session_regenerate_id();
+
+        // Guardo en la sesión solo lo que necesito para saber quién es y qué puede hacer.
+        // La contraseña nunca la meto en la sesión.
+        $_SESSION['usuario_id'] = $usuario['id'];
+        $_SESSION['usuario_nombre'] = $usuario['nombre'];
+        $_SESSION['usuario_rol'] = $usuario['rol'];
+
+        $_SESSION['mensaje'] = 'Hola, ' . $usuario['nombre'] . '.';
+        $_SESSION['mensaje_tipo'] = 'exito';
+
+        // Según el rol le llevo a un panel o a otro
+        if ($usuario['rol'] === 'admin') {
+            header('Location: index.php?pagina=admin');
+        } else {
+            header('Location: index.php?pagina=panel');
+        }
+        exit;
+    }
+
+    // Cierro la sesión. Primero vacío todas las variables y luego la destruyo.
+    // Después arranco una sesión nueva y limpia solo para poder enseñar el mensaje de despedida.
+    public static function logout() {
+        session_unset();
+        session_destroy();
+
+        session_start();
+        $_SESSION['mensaje'] = 'Has cerrado sesión.';
         $_SESSION['mensaje_tipo'] = 'exito';
         header('Location: index.php?pagina=inicio');
         exit;

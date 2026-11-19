@@ -7,6 +7,42 @@
 session_start();
 
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/models/Usuario.php';
+
+// Unas funciones pequeñas para controlar quién puede entrar a cada página.
+// Las uso antes de cargar las vistas privadas.
+
+// Devuelve true si hay alguien que ha hecho login
+function haySesion() {
+    return isset($_SESSION['usuario_id']);
+}
+
+// Devuelve true si el que ha hecho login es administrador
+function esAdmin() {
+    return haySesion() && $_SESSION['usuario_rol'] === 'admin';
+}
+
+// Si no hay nadie con sesión iniciada, lo mando al login y corto la ejecución
+function exigirSesion() {
+    if (!haySesion()) {
+        $_SESSION['mensaje'] = 'Tienes que iniciar sesión para ver esa página.';
+        $_SESSION['mensaje_tipo'] = 'error';
+        header('Location: index.php?pagina=login');
+        exit;
+    }
+}
+
+// Si el que intenta entrar no es admin, lo devuelvo al inicio.
+// Primero compruebo que haya sesión, porque si no ni siquiera sé quién es.
+function exigirAdmin() {
+    exigirSesion();
+    if (!esAdmin()) {
+        $_SESSION['mensaje'] = 'No tienes permiso para entrar en esa zona.';
+        $_SESSION['mensaje_tipo'] = 'error';
+        header('Location: index.php?pagina=inicio');
+        exit;
+    }
+}
 
 // Si no me dicen ninguna página, enseño el inicio
 $pagina = $_GET['pagina'] ?? 'inicio';
@@ -30,6 +66,35 @@ switch ($pagina) {
     case 'procesar_registro':
         require_once __DIR__ . '/controllers/AuthController.php';
         AuthController::registro();
+        break;
+
+    case 'login':
+        $titulo = 'Iniciar sesión';
+        include __DIR__ . '/views/auth/login.php';
+        break;
+
+    case 'procesar_login':
+        require_once __DIR__ . '/controllers/AuthController.php';
+        AuthController::login();
+        break;
+
+    case 'logout':
+        require_once __DIR__ . '/controllers/AuthController.php';
+        AuthController::logout();
+        break;
+
+    // Zona del socio, hace falta haber iniciado sesión
+    case 'panel':
+        exigirSesion();
+        $titulo = 'Mi panel';
+        include __DIR__ . '/views/usuario/panel.php';
+        break;
+
+    // Zona del administrador, hace falta sesión y además rol de admin
+    case 'admin':
+        exigirAdmin();
+        $titulo = 'Panel de administración';
+        include __DIR__ . '/views/admin/panel.php';
         break;
 
     // Cualquier página que no exista cae aquí. Además de enseñar la página de error,
