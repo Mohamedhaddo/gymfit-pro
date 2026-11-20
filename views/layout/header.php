@@ -14,6 +14,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titulo ?? 'GymFit Pro'); ?> | GymFit Pro</title>
+    <!-- Mi hoja de estilos, la misma para todas las páginas -->
+    <link rel="stylesheet" href="public/css/estilos.css">
 </head>
 <body>
     <header class="cabecera">
@@ -32,10 +34,10 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php else: ?>
                     <a href="index.php?pagina=panel">Mi panel</a>
                 <?php endif; ?>
-                <a href="index.php?pagina=logout">Cerrar sesión</a>
+                <a href="index.php?pagina=logout" class="enlace-boton">Cerrar sesión</a>
             <?php else: ?>
-                <a href="index.php?pagina=login">Entrar</a>
-                <a href="index.php?pagina=registro">Registrarse</a>
+                <a href="index.php?pagina=login" class="enlace-boton">Entrar</a>
+                <a href="index.php?pagina=registro" class="enlace-boton-destacado">Registrarse</a>
             <?php endif; ?>
         </nav>
     </header>
