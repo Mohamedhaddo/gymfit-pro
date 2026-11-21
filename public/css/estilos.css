@@ -154,3 +154,100 @@ a:hover {
     margin: 0 auto;
     padding: 0 30px;
 }
+
+
+/* BOTÓN GENERAL
+   Lo uso en la portada y en el resto de llamadas a la acción de la web.
+   Al pasar el ratón lo subo un poco con transform para que se note que se puede pulsar. */
+.boton {
+    display: inline-block;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--color-acento);
+    color: var(--color-fondo);
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform var(--transicion), background-color var(--transicion);
+}
+
+.boton:hover {
+    color: var(--color-fondo);
+    background-color: var(--color-texto);
+    transform: translateY(-2px);
+}
+
+
+/* PORTADA
+   La caja grande de arriba con el mensaje principal. En el prototipo es un
+   degradado que va del morado al color del fondo, y aquí lo hago con linear-gradient.
+   Referencia: https://developer.mozilla.org/es/docs/Web/CSS/gradient/linear-gradient */
+.portada {
+    margin-top: 22px;
+    padding: 80px 30px;
+    border-radius: var(--radio);
+    background-image: linear-gradient(to bottom right, var(--color-secundario), var(--color-fondo));
+    text-align: center;
+}
+
+.portada h1 {
+    font-size: 36px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+}
+
+.portada p {
+    font-size: 17px;
+    color: #d8d8e8;
+    margin-bottom: 28px;
+}
+
+
+/* BLOQUES DE CONTENIDO
+   Cada sección de la página después de la portada, con su título */
+.bloque {
+    margin-top: 50px;
+}
+
+.bloque h2 {
+    font-size: 24px;
+    margin-bottom: 22px;
+}
+
+
+/* TARJETAS
+   Las cuatro tarjetas de "¿Por qué GymFit Pro?". Uso grid con cuatro columnas
+   iguales (1fr cada una) para que salgan en una sola fila como en el prototipo.
+   Referencia: https://developer.mozilla.org/es/docs/Web/CSS/CSS_grid_layout */
+.rejilla-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+/* Cada tarjeta lleva arriba una línea gruesa del color de acento, que es
+   el detalle que les di en el prototipo para que destaquen */
+.tarjeta {
+    min-height: 150px;
+    padding: 22px 20px;
+    border: 1px solid var(--color-borde);
+    border-top: 4px solid var(--color-acento);
+    border-radius: var(--radio);
+    background-color: var(--color-tarjeta);
+    transition: transform var(--transicion);
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+}
+
+.tarjeta h3 {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.tarjeta p {
+    font-size: 14px;
+    color: var(--color-texto-suave);
+}
